@@ -84,4 +84,14 @@ public class ImportTest {
             assertTrue(e.getMessage().contains("Unable to parse library: importTestFail.libsonnet"), "Found message: " + e.getMessage());
         }
     }
+
+    @Test
+    void importDs() throws Exception {
+        final String lib = TestResourceReader.readFileAsString("importTest.ds");
+        String result = new MapperBuilder("local testlib = import 'importTest.ds'; testlib.uppercase('foo')")
+                .withImports(Collections.singletonMap("importTest.ds", lib))
+                .build()
+                .transform("{}");
+        assertEquals(result, "FOO");
+    }
 }
